@@ -58,8 +58,13 @@ class SearchFragment : Fragment() {
 
         searchViewModel.text.observe(viewLifecycleOwner, {
             uiScope.launch {
-                commitsDao.addCommits(CommitsModel(searchViewModel.text.value!!,
-                    searchViewModel.listOfCommits.value))
+                val repositoryId = searchViewModel.text.value
+                val listOfComments = searchViewModel.listOfCommits.value
+                val search: String = searchEditText.text.toString()
+                val (owner, repository) = search.split("/")
+                searchViewModel.getCommitsFromOwnersRepository(owner, repository)
+                if (repositoryId != null)
+                    commitsDao.addCommits(CommitsModel(repositoryId, owner, repository, listOfComments))
             }
         })
 
@@ -69,9 +74,11 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         searchButton.setOnClickListener {
             val search: String = searchEditText.text.toString()
-            val (owner, repository) = search.split("/")
-            searchViewModel.getRepositoryFromOwner(owner, repository)
-            searchViewModel.getCommitsFromOwnersRepository(owner, repository)
+            try {
+                val (owner, repository) = search.split("/")
+                searchViewModel.getRepositoryFromOwner(owner, repository)
+            } catch (e: Exception) {
+            }
         }
     }
 }

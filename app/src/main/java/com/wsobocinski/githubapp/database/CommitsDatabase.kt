@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.wsobocinski.githubapp.database.model.CommitsModel
 
 @TypeConverters(Converters::class)
-@Database(entities = [CommitsModel::class], version = 3, exportSchema = false)
+@Database(entities = [CommitsModel::class], version = 2, exportSchema = false)
 abstract class CommitsDatabase : RoomDatabase() {
     abstract val commitsDatabaseDao: CommitsDao
 

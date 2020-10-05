@@ -11,5 +11,9 @@ data class CommitsModel (
     @PrimaryKey
     @ColumnInfo(name = "repository_id")
     val repositoryId: String,
+    @ColumnInfo(name = "owner_name")
+    val ownerName: String,
+    @ColumnInfo(name = "repository_name")
+    val repositoryName: String,
     val commits: List<SingleCommit>?
 )

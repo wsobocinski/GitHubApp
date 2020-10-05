@@ -18,4 +18,7 @@ interface CommitsDao {
 
     @Query("SELECT * from commits")
     suspend fun getAllCommits(): List<CommitsModel>
+
+    @Query("SELECT * from commits WHERE owner_name = :ownerName AND repository_name = :repositoryName")
+    suspend fun getCommitsFromOwnerAndRepoNames(ownerName: String, repositoryName: String): CommitsModel?
 }

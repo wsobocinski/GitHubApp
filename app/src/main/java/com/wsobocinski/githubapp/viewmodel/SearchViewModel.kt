@@ -16,10 +16,6 @@ class SearchViewModel : ViewModel() {
     var text: MutableLiveData<String> = MutableLiveData<String>()
     var listOfCommits = MutableLiveData<MutableList<SingleCommit>>()
 
-
-    init {
-        text.value = "NONE"
-    }
     fun getRepositoryFromOwner(owner: String, repository: String) {
         val api = GithubApi.retrofitService.getOwnersRepository(owner, repository)
         api.enqueue(object: Callback<RepositoryModel> {
