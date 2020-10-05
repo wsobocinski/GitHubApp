@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -53,12 +54,24 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit_version"
 
     // Moshi
-    implementation("com.squareup.moshi:moshi:1.11.0")
-    implementation "com.squareup.moshi:moshi-kotlin:1.11.0"
+    def moshi_version = "1.11.0"
+    implementation("com.squareup.moshi:moshi:$moshi_version")
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi_version"
+
+    // CardView
+    def cardview_verion = "1.0.0"
+    implementation "androidx.cardview:cardview:$cardview_verion"
+
+    // Room
+    def room_version = "2.3.0-alpha01"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
 
 
 }

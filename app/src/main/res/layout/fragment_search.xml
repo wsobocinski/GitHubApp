@@ -7,13 +7,13 @@
 
         <variable
             name="homeViewModel"
-            type="com.wsobocinski.githubapp.ui.home.HomeViewModel" />
+            type="com.wsobocinski.githubapp.viewmodel.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.home.HomeFragment">
+        tools:context=".fragment.SearchFragment">
 
         <EditText
             android:id="@+id/searchEditText"

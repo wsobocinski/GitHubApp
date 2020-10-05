@@ -3,23 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_search">
 
     <fragment
-        android:id="@+id/nav_home"
-        android:name="com.wsobocinski.githubapp.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/nav_search"
+        android:name="com.wsobocinski.githubapp.fragment.SearchFragment"
+        android:label="@string/menu_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.wsobocinski.githubapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_cashed"
+        android:name="com.wsobocinski.githubapp.fragment.CashedFragment"
+        android:label="@string/menu_cashed"
+        tools:layout="@layout/fragment_cashed" />
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.wsobocinski.githubapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
 </navigation>

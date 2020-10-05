@@ -5,7 +5,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.wsobocinski.githubapp.model.CommitModel
 import com.wsobocinski.githubapp.model.RepositoryModel
-import com.wsobocinski.githubapp.model.UserModel
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -27,9 +26,6 @@ val retrofit = Retrofit.Builder()
 
 
 interface GitHubService {
-    @GET("/users/{user}")
-    fun getUser(@Path("user") user: String?): Call<UserModel>
-
     @GET("/repos/{owner}/{repository}/commits")
     fun getCommitsFromOwnersRepository(@Path("owner") owner: String,
                                        @Path("repository") repository: String)

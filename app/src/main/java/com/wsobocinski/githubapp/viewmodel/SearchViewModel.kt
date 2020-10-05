@@ -1,24 +1,17 @@
-package com.wsobocinski.githubapp.ui.home
+package com.wsobocinski.githubapp.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.wsobocinski.githubapp.model.CommitModel
 import com.wsobocinski.githubapp.model.RepositoryModel
 import com.wsobocinski.githubapp.model.SingleCommit
-import com.wsobocinski.githubapp.model.UserModel
-import com.wsobocinski.githubapp.network.GitHubService
 import com.wsobocinski.githubapp.network.GithubApi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 
 
-class HomeViewModel : ViewModel() {
+class SearchViewModel : ViewModel() {
 
     var text: MutableLiveData<String> = MutableLiveData<String>()
     var listOfCommits = MutableLiveData<MutableList<SingleCommit>>()
