@@ -5,6 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.wsobocinski.githubapp.model.CommitModel
+import com.wsobocinski.githubapp.model.RepositoryModel
+import com.wsobocinski.githubapp.model.SingleCommit
 import com.wsobocinski.githubapp.model.UserModel
 import com.wsobocinski.githubapp.network.GitHubService
 import com.wsobocinski.githubapp.network.GithubApi
@@ -18,20 +21,43 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class HomeViewModel : ViewModel() {
 
     var text: MutableLiveData<String> = MutableLiveData<String>()
+    var listOfCommits = MutableLiveData<MutableList<SingleCommit>>()
+
 
     init {
-        text.value = "NOTHING"
+        text.value = "NONE"
     }
-
-
-    fun testFunction(){
-        val api = GithubApi.retrofitService.getUser("wsobocinski")
-        api.enqueue(object: Callback<UserModel> {
-            override fun onResponse(call: Call<UserModel>, response: Response<UserModel>) {
-                text.value = response.body().toString()
+    fun getRepositoryFromOwner(owner: String, repository: String) {
+        val api = GithubApi.retrofitService.getOwnersRepository(owner, repository)
+        api.enqueue(object: Callback<RepositoryModel> {
+            override fun onResponse(
+                call: Call<RepositoryModel>,
+                response: Response<RepositoryModel>) {
+                text.postValue(response.body()?.id)
             }
 
-            override fun onFailure(call: Call<UserModel>, t: Throwable) {
+            override fun onFailure(call: Call<RepositoryModel>, t: Throwable) {
+                text.value = t.message
+            }
+        })
+    }
+    fun getCommitsFromOwnersRepository(owner: String, repository: String){
+        val api = GithubApi.retrofitService.getCommitsFromOwnersRepository(owner, repository)
+        api.enqueue(object: Callback<List<CommitModel>> {
+            override fun onResponse(call: Call<List<CommitModel>>,
+                response: Response<List<CommitModel>>) {
+
+                var responseCommits = mutableListOf<SingleCommit>()
+                response.body()?.forEach {
+                    val shaValue = it.sha
+                    val message = it.commit?.message
+                    val author = it.commit?.author?.name
+                    responseCommits.add(SingleCommit(message, shaValue, author))
+                }
+                listOfCommits.postValue(responseCommits)
+            }
+
+            override fun onFailure(call: Call<List<CommitModel>>, t: Throwable) {
                 text.value = t.message
             }
         })

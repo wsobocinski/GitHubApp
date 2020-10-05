@@ -5,15 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.wsobocinski.githubapp.CommitsAdapter
 import com.wsobocinski.githubapp.R
+import com.wsobocinski.githubapp.databinding.FragmentHomeBinding
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var commitsAdapter: CommitsAdapter
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -22,19 +26,30 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val textView: TextView = root.findViewById(R.id.text_home)
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+
+        binding.homeViewModel = homeViewModel
+
         homeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+            repositoryId.text = it
         })
 
+        commitsAdapter = CommitsAdapter()
+        binding.commitsRecyclerView.adapter = commitsAdapter
 
-        return root
+        homeViewModel.listOfCommits.observe(viewLifecycleOwner, {
+            commitsAdapter.submitList(it)
+        })
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        button.setOnClickListener {
-            homeViewModel.testFunction()
+        searchButton.setOnClickListener {
+            val search: String = searchEditText.text.toString()
+            val (owner, repository) = search.split("/")
+            homeViewModel.getRepositoryFromOwner(owner, repository)
+            homeViewModel.getCommitsFromOwnersRepository(owner, repository)
         }
     }
 }
