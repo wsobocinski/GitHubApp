@@ -1,5 +1,8 @@
 # GitHubApp
 Applicaiton for getting repositories information.
+Uses Retrofit to obtain information from GitHub Api.
+Uses Room to cashe obtained information.
+Has ability to send selected cashed data by message applications.
 
 
 ## To run search for repository type <owner>/<repository> in EditText field and then click Search button
