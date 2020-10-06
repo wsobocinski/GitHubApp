@@ -17,7 +17,7 @@ class Converters {
     }
 
     @TypeConverter
-    fun toAddresses(singleCommit: String?): List<SingleCommit>? {
+    fun toAddresses(singleCommit: String): List<SingleCommit>? {
         return moshiAdapter.fromJson(singleCommit)
     }
 }

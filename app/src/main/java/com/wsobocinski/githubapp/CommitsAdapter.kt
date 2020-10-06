@@ -1,5 +1,6 @@
 package com.wsobocinski.githubapp
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,12 +21,20 @@ class CommitsAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         when(holder) {
             is  CommitViewHolder -> {
                 holder.bind(differ.currentList[position])
+                holder.itemView.setOnClickListener{
+                    getCurrentList()[position].itemClicked()
+                    if (getCurrentList()[position].selected) it.alpha =0.4f else it.alpha=1.0f
+                }
             }
         }
     }
 
     fun submitList(commits: List<SingleCommit>) {
         differ.submitList(commits)
+    }
+
+    fun getCurrentList(): List<SingleCommit> {
+        return differ.currentList
     }
 
     override fun getItemCount(): Int {

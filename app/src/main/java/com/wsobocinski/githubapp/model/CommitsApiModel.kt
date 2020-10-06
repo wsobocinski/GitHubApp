@@ -1,6 +1,6 @@
 package com.wsobocinski.githubapp.model
 
-data class CommitModel(
+data class CommitsApiModel(
     val commit: Commit?,
     val sha: String?,
 )

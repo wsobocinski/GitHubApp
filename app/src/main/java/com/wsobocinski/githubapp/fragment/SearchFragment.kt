@@ -6,66 +6,45 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.wsobocinski.githubapp.CommitsAdapter
 import com.wsobocinski.githubapp.R
 import com.wsobocinski.githubapp.database.CommitsDao
 import com.wsobocinski.githubapp.database.CommitsDatabase
-import com.wsobocinski.githubapp.database.model.CommitsModel
 import com.wsobocinski.githubapp.databinding.FragmentSearchBinding
+import com.wsobocinski.githubapp.network.GithubApi
 import com.wsobocinski.githubapp.viewmodel.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel by viewModels<SearchViewModel>()
     private lateinit var commitsAdapter: CommitsAdapter
     private val employeeDatabase :CommitsDatabase by lazy {
         CommitsDatabase.getInstance(requireContext()) }
     private val commitsDao: CommitsDao by lazy {
         employeeDatabase.commitsDatabaseDao}
 
-
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        searchViewModel =
-                ViewModelProviders.of(this).get(SearchViewModel::class.java)
         val binding: FragmentSearchBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_search, container, false)
 
+        binding.lifecycleOwner = this
         binding.homeViewModel = searchViewModel
 
-        searchViewModel.text.observe(viewLifecycleOwner, Observer {
-            repositoryId.text = it
-        })
+
+
 
         commitsAdapter = CommitsAdapter()
         binding.commitsRecyclerView.adapter = commitsAdapter
 
-        searchViewModel.listOfCommits.observe(viewLifecycleOwner, {
-            commitsAdapter.submitList(it)
-        })
-
-        searchViewModel.text.observe(viewLifecycleOwner, {
-            uiScope.launch {
-                val repositoryId = searchViewModel.text.value
-                val listOfComments = searchViewModel.listOfCommits.value
-                val search: String = searchEditText.text.toString()
-                val (owner, repository) = search.split("/")
-                searchViewModel.getCommitsFromOwnersRepository(owner, repository)
-                if (repositoryId != null)
-                    commitsDao.addCommits(CommitsModel(repositoryId, owner, repository, listOfComments))
-            }
+        searchViewModel.commitsModel.observe(viewLifecycleOwner, {
+            repositoryId.text = "REPOSITORY ID: ${it.repositoryId}"
+            commitsAdapter.submitList(it.commits!!)
         })
 
         return binding.root
@@ -76,7 +55,7 @@ class SearchFragment : Fragment() {
             val search: String = searchEditText.text.toString()
             try {
                 val (owner, repository) = search.split("/")
-                searchViewModel.getRepositoryFromOwner(owner, repository)
+                searchViewModel.getListOfCommits(owner, repository)
             } catch (e: Exception) {
             }
         }

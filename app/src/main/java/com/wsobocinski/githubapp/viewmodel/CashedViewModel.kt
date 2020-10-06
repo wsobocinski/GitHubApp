@@ -1,17 +1,32 @@
 package com.wsobocinski.githubapp.viewmodel
 
-import androidx.lifecycle.LiveData
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.wsobocinski.githubapp.database.CommitsDatabase
+import com.wsobocinski.githubapp.database.model.CommitsModel
+import com.wsobocinski.githubapp.repository.CommitsRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
-class CashedViewModel : ViewModel() {
+class CashedViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is gallery Fragment"
+    private var viewModelJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    var text = MutableLiveData<String>()
+
+    val repositoryResponse = MutableLiveData<CommitsModel>()
+
+
+
+    fun getCommitsForOwnerAndRepoNames(owner:String, repo:String) {
+        uiScope.launch {
+            repositoryResponse.postValue(CommitsRepository.getInstance(getApplication())
+                .getCommitsFromOwnerAndRepoNames(owner, repo))
+        }
+
     }
-    val text: LiveData<String> = _text
-
-
 
 }
